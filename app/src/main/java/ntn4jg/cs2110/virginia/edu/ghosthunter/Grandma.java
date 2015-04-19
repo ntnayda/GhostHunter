@@ -24,7 +24,7 @@ public class Grandma {
     private float gPosY;
     private float gNextX;
     private float gNextY;
-    private Rect hitbox;
+    private float speed;
 
     public float getgPosX() {
         return gPosX;
@@ -58,20 +58,20 @@ public class Grandma {
         this.gNextY = gNextY;
     }
 
-    public Rect getHitbox() {
-        return hitbox;
+    public float getSpeed() {
+        return speed;
     }
 
-    public void setHitbox(Rect hitbox) {
-        this.hitbox = hitbox;
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 
     public Grandma() {
-        gPosX = 465;
-        gPosY = 775;
-        gNextX = 465;
-        gNextY = 775;
-        hitbox = new Rect((int) gPosX,(int) gPosX+150,(int) gPosY,(int) gPosY+150);
+        gPosX = 1024;
+        gPosY = 1024;
+        gNextX = 1024;
+        gNextY = 1024;
+        speed = 3;
     }
 
 

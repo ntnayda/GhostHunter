@@ -1,18 +1,13 @@
 package ntn4jg.cs2110.virginia.edu.ghosthunter;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.view.View;
 
 import java.util.Random;
 
 /**
- * Created by ntnayda on 4/7/15.
+ * Created by ntnayda on 4/13/15.
  */
-public class simpleGhost{
+public class evilGhost {
 
     private float posX;
     private float posY;
@@ -48,6 +43,10 @@ public class simpleGhost{
         return nextY;
     }
 
+    public void setNextY(float nextY) {
+        this.nextY = nextY;
+    }
+
     public float getSpeed() {
         return speed;
     }
@@ -56,17 +55,17 @@ public class simpleGhost{
         this.speed = speed;
     }
 
-    public void setNextY(float nextY) {
-        this.nextY = nextY;
-    }
-
-    public simpleGhost() {
+    public evilGhost(float x, float y) {
         Random r = new Random();
-        speed = 2;
+        speed = (float) (.5 + r.nextFloat());
         posX = r.nextInt(2048);
         posY = r.nextInt(2048);
+        while(posX > x-200 && posX < x+350 && posY > y-200 && posY < y+350)
+        {
+            posX = r.nextInt(2048);
+            posY = r.nextInt(2048);
+        }
         nextX = posX;
         nextY = posY;
     }
-
 }

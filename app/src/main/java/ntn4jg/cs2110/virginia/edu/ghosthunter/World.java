@@ -10,25 +10,33 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.jar.Attributes;
 
 /**
  * Created by ntnayda on 4/7/15.
  */
 
-public class World extends View{
+public class World extends View {
 
     private ArrayList<simpleGhost> simpleGhosts;
     private ArrayList<evilGhost> evilGhosts;
     private Grandma granny;
-    private Bitmap bigghostpic = BitmapFactory.decodeResource(getResources(), R.drawable.simpleghost);
-    private Bitmap ghostpic = Bitmap.createScaledBitmap(bigghostpic, 150, 150, false);
+    private Bitmap bigcatpic = BitmapFactory.decodeResource(getResources(), R.drawable.cat);
+    private Bitmap catpic = Bitmap.createScaledBitmap(bigcatpic, 150, 150, false);
     private Bitmap biggrandmapic = BitmapFactory.decodeResource(getResources(), R.drawable.grandma);
     private Bitmap grandmapic = Bitmap.createScaledBitmap(biggrandmapic, 150, 150, false);
     private Bitmap bigbackround = BitmapFactory.decodeResource(getResources(), R.drawable.backround2);//source:http://hsto.org/storage2/d8c/f89/4bd/d8cf894bdade75b9db47ff2cd83f68f8.png
@@ -36,14 +44,6 @@ public class World extends View{
     private Bitmap bigevilghost = BitmapFactory.decodeResource(getResources(), R.drawable.evilghost1);
     private Bitmap evilghost = Bitmap.createScaledBitmap(bigevilghost, 150, 150, false);
     private int ghostsCaptured;
-
-    /*private Bitmap bomb = BitmapFactory.decodeResource(getResources(), R.drawable.bomb);
-    private Bitmap coin = BitmapFactory.decodeResource(getResources(), R.drawable.coin1);
-    private Bitmap magnet = BitmapFactory.decodeResource(getResources(), R.drawable.magnet);
-    private Bitmap pause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
-    private Bitmap rocket = BitmapFactory.decodeResource(getResources(), R.drawable.rocket);
-    private Bitmap spray = BitmapFactory.decodeResource(getResources(), R.drawable.spray);
-    private Bitmap superman = BitmapFactory.decodeResource(getResources(), R.drawable.superman);*/
     private final int defaulttranslatex;
     private final int defaulttranslatey;
     private int translatex;
@@ -51,19 +51,33 @@ public class World extends View{
     public int screenWidth;
     public int screenHeight;
     private int boundSize = 100;
-    double time=0;
+    int time=0;
+    int score = 0;
+    private TextView captured;
 
-    public double getTime() {
-        return time;
+
+    //private MediaPlayer meow;
+
+    public int getGhostsCaptured() {
+        return ghostsCaptured;
     }
 
-    public void setTime(double time) {
-        this.time = time;
+    public void setGhostsCaptured(int ghostsCaptured) {
+        this.ghostsCaptured = ghostsCaptured;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public World(Context context, int screenWidth,int screenHeight){//}, PlayActivity play) {
         super(context);
-        bigghostpic =null;
+        //meow = MediaPlayer.create(context,R.drawable.meow);
+        bigcatpic =null;
         bigbackround=null;
         bigevilghost=null;
         biggrandmapic=null;
@@ -91,26 +105,31 @@ public class World extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        time++;
         canvas.save();
         moveScreen(canvas, (int) granny.getgPosX(), (int) granny.getgPosY());
         canvas.translate(translatex, translatey);
-        createEvilGhosts(time);
-        if (PlayActivity.bomb){
-            detonate();
+
+        if (PlayActivity.pause == false) {
+            createEvilGhosts(time);
+            if (PlayActivity.bomb){
+                detonate();
+            }
+            moveGrandma();
+            moveGhost();
+            moveEvilGhosts();
+            checkGameOver();
+            removeCaptured();
+            PlayActivity.money++;
+            time++;
+            score++;
         }
-        moveGrandma();
-        moveGhost();
-        moveEvilGhosts();
-        checkGameOver();
-        removeCaptured();
+
         drawObjects(canvas);
-        PlayActivity.money++;
         canvas.restore();
         this.invalidate();
     }
 
-    @Override
+    /*@Override
     public boolean onTouchEvent(MotionEvent e) {
         switch (e.getAction()) {
             //Finger touches the screen
@@ -132,9 +151,29 @@ public class World extends View{
                 break;
         }
         return true;
-    }
+    }*/
 
     public void moveGrandma() {
+
+        //Calc distance travelled in that time
+        float xS = (PlayActivity.xVelocity/2)*PlayActivity.frameTime;
+        float yS = (PlayActivity.yVelocity/2)*PlayActivity.frameTime;
+        //Log.d("xs:",""+xS);
+        //Log.d("ys:",""+yS);
+        granny.setgPosX(granny.getgPosX() - xS);
+        granny.setgPosY(granny.getgPosY() - yS);
+        if (granny.getgPosX() > 2048) {
+            granny.setgPosX(2048);
+        }
+        if (granny.getgPosX() < 0) {
+            granny.setgPosX(0);
+        }
+        if (granny.getgPosY() > 2048) {
+            granny.setgPosY(2048);
+        }
+        if (granny.getgPosY() < 0) {
+            granny.setgPosY(0);
+        }/*
         if (PlayActivity.rocket){
             granny.setSpeed(6);
         }
@@ -157,7 +196,7 @@ public class World extends View{
         }
         else if (dy < granny.getSpeed() && dy > -granny.getSpeed()) {
             granny.setgPosY(granny.getgNextY());
-        }
+        }*/
     }
     public void moveScreen(Canvas canvas, int x, int y) {
         if (x > (1024 + screenWidth/4)){
@@ -229,7 +268,7 @@ public class World extends View{
             canvas.drawBitmap(evilghost, current.getPosX() - 75, current.getPosY() - 75, null);
         }
         for (simpleGhost current : simpleGhosts) {
-            canvas.drawBitmap(ghostpic, current.getPosX() - 75, current.getPosY() - 75, null);
+            canvas.drawBitmap(catpic, current.getPosX() - 75, current.getPosY() - 75, null);
         }
         canvas.drawBitmap(grandmapic, granny.getgPosX() - 75, granny.getgPosY() - 75, null);
     }
@@ -248,6 +287,7 @@ public class World extends View{
         for (int i = 0; i < remove.size(); i++) {
             simpleGhosts.remove(remove.get(i)-i);
             PlayActivity.money += 100;
+            score += 100;
             ghostsCaptured++;
             simpleGhost spawn = new simpleGhost();
             simpleGhosts.add(spawn);
@@ -384,6 +424,7 @@ public class World extends View{
             }
         }
     }
+
 
 
 

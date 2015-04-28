@@ -21,12 +21,10 @@ public class MainActivity extends Activity {
     {
         Intent intent = new Intent(MainActivity.this, HighScoresActivity.class);
         startActivity(intent);
-        this.finish();
     }public void openPlay(View view)
     {
         Intent intent = new Intent(MainActivity.this, PlayActivity.class);
         startActivity(intent);
-        this.finish();
     }
 
 }

@@ -16,7 +16,7 @@
 
         android:layout_weight="1"
         android:id="@+id/pause"
-        android:background="@drawable/pause"
+        android:src="@drawable/pause"
 
         android:scaleType="fitXY"
         android:onClick="pause"
@@ -30,7 +30,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:id="@+id/bomb"
-        android:background="@drawable/bomb"
+        android:src="@drawable/bomb"
         android:layout_weight="1"
         android:scaleType="fitXY"
         android:onClick="bomb"/>
@@ -39,7 +39,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:id="@+id/repellent"
-        android:background="@drawable/spray"
+        android:src="@drawable/spray"
         android:layout_weight="1"
         android:scaleType="fitXY"
         android:onClick="repel"/>
@@ -48,7 +48,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:id="@+id/magnet"
-        android:background="@drawable/magnet"
+        android:src="@drawable/magnet"
         android:layout_weight="1"
         android:scaleType="fitXY"
         android:onClick="attract"/>
@@ -57,7 +57,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:id="@+id/superSpeed"
-        android:background="@drawable/rocket"
+        android:src="@drawable/rocket"
         android:layout_weight="1"
         android:scaleType="fitXY"
         android:onClick="rocket"/>
@@ -66,7 +66,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:id="@+id/invincible"
-        android:background="@drawable/superman"
+        android:src="@drawable/superman"
         android:layout_weight="1"
         android:scaleType="fitXY"
         android:onClick="invincible"/>
@@ -76,11 +76,11 @@
         android:layout_weight="1"
         android:scaleType="fitXY"/>
 
-        <ImageButton
+        <ImageView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:id="@+id/superScore"
-        android:background="@drawable/coin1"
+        android:src="@drawable/coin1"
         android:layout_weight="1"
         android:scaleType="fitXY"/>
    <RelativeLayout
